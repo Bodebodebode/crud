@@ -21,6 +21,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			padding-left: 5px;
 			padding-right: 5px;
 		}
+		#container{
+		  text-align: center;
+		}
+		#container_ler{
+		  text-align: center;
+		  display:inline-grid;
+		  width: 100%;
+		}
+
+		.select_container {
+		  display: inline-flex;
+		  margin:20px;
+
+		}
+
+		.display_box, .select{
+		  display: inline-block;
+		  width: 50%;
+		  height: 250px;
+		}
 	</style>
 </head>
 <body>

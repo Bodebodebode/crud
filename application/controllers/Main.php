@@ -132,6 +132,24 @@ class Main extends CI_Controller {
 
 	//READ
 	public function ler(){
+		$dados = $this->ler_X();
+		$data = array(
+									'titulo' => 'CRUD - Teste Instituto Bulla',
+									'subtitulo' => 'Ler',
+									'grupos' => $dados['grupos'],
+									'produtos' => $dados['produtos']
+									);
+									if($data['grupos'] == ''){
+										$data['grupos'] = array();
+									}
+									if($data['produtos'] == ''){
+										$data['produtos'] = array();
+									}
+		$this->load->view('ler', $data);
+	}
+
+	public function ler_X(){
+		// funcao que le todos os produtos/grupos com seus grupos/produtos
 		$grupos =$this->GrupoDeProdutos_model->ler(NULL);
 
 		$produtos = $this->Produtos_model->ler(NULL);
@@ -156,20 +174,10 @@ class Main extends CI_Controller {
 			$count = $count+1;
 
 		}
-
-		$data = array(
-									'titulo' => 'CRUD - Teste Instituto Bulla',
-									'subtitulo' => 'Ler',
-									'grupos' => $grupos_com_produtos,
-									'produtos' => $produtos_com_grupos
-									);
-									if($data['grupos'] == ''){
-										$data['grupos'] = array();
-									}
-									if($data['produtos'] == ''){
-										$data['produtos'] = array();
-									}
-		$this->load->view('ler', $data);
+		return $data = array(
+												'produtos' => $produtos_com_grupos,
+												'grupos' => $grupos_com_produtos
+												);
 	}
 
 	/* nao necessario, pois os dados ja estao sendo lidos quando carrega a pagina
@@ -184,10 +192,19 @@ class Main extends CI_Controller {
 	*/
 	//UPDATE
 	public function atualizar(){
+		$dados = $this->ler_X();
 		$data = array(
 									'titulo' => 'CRUD - Teste Instituto Bulla',
-									'subtitulo' => 'Atualizar'
+									'subtitulo' => 'Atualizar',
+									'grupos' => $dados['grupos'],
+									'produtos' => $dados['produtos']
 									);
+									if($data['grupos'] == ''){
+										$data['grupos'] = array();
+									}
+									if($data['produtos'] == ''){
+										$data['produtos'] = array();
+									}
 		$this->load->view('atualizar', $data);
 	}
 
@@ -201,15 +218,25 @@ class Main extends CI_Controller {
 
 	//DELETE
 	public function deletar(){
+		$dados = $this->ler_X();
 		$data = array(
 									'titulo' => 'CRUD - Teste Instituto Bulla',
-									'subtitulo' => 'Deletar'
+									'subtitulo' => 'Deletar',
+									'grupos' => $dados['grupos'],
+									'produtos' => $dados['produtos']
 									);
+									if($data['grupos'] == ''){
+										$data['grupos'] = array();
+									}
+									if($data['produtos'] == ''){
+										$data['produtos'] = array();
+									}
 		$this->load->view('deletar', $data);
 	}
 
 	public function deletar_produto(){
-
+		$deletar_produto = $this->Produtos_model->deletar($this->input->post());
+		redirect('', 'refresh');
 	}
 
 	public function deletar_grupo(){

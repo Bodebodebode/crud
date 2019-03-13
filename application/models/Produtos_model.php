@@ -72,24 +72,38 @@ class Produtos_model extends CI_Model {
     }
   }
 
-} /*else if(array_key_exists('nome', $dados)){
-        $this->db->where('nome', $dados['nome']);
-        $query = $this->db->get('produtos');
-        return $query->result();
+  /*else if(array_key_exists('nome', $dados)){
+    $this->db->where('nome', $dados['nome']);
+    $query = $this->db->get('produtos');
+    return $query->result();
 
-      } else if(array_key_exists('codigo', $dados)){
-      $this->db->where('codigo', $dados['codigo']);
-      $query = $this->db->get('produtos');
-      return $query->result();
+  } else if(array_key_exists('codigo', $dados)){
+  $this->db->where('codigo', $dados['codigo']);
+  $query = $this->db->get('produtos');
+  return $query->result();
 
 
-      } else if(array_key_exists('fabricante', $dados)){
-          $this->db->where('fabricante', $dados['fabricante']);
-          $query = $this->db->get('produtos');
-          return $query->result();
+  } else if(array_key_exists('fabricante', $dados)){
+  $this->db->where('fabricante', $dados['fabricante']);
+  $query = $this->db->get('produtos');
+  return $query->result();
 
-      } else if(array_key_exists('tipo', $dados)){
-            $this->db->where('tipo', $dados['tipo']);
-            $query = $this->db->get('produtos');
-            return $query->result();
-      }*/
+  } else if(array_key_exists('tipo', $dados)){
+  $this->db->where('tipo', $dados['tipo']);
+  $query = $this->db->get('produtos');
+  return $query->result();
+  }*/
+
+  public function deletar($id){
+    $id = array_keys($id)[0];
+    // deleta primeiro instancias da tabela produto x grupo
+    $this->db->where('produtos', $id);
+    $this->db->delete('produtosxgrupos');
+    $this->db->where('id', $id);
+    $this->db->delete('produtos');
+    return;
+  }
+
+
+
+}

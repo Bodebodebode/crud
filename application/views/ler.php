@@ -3,26 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
 <?php  $this->load->view('header'); ?>
 <style>
-#container{
-  text-align: center;
-}
-#container_ler{
-  text-align: center;
-  display:inline-grid;
-  width: 100%;
-}
 
-.select_container {
-  display: inline-flex;
-  margin:20px;
-
-}
-
-.display_box, .select{
-  display: inline-block;
-  width: 50%;
-  height: 250px;
-}
 
 
 
@@ -100,7 +81,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             }
           }
           if($grupos_p == ''){
-            $grupos_p = '<p style="color:gray"> Não possui nenhum grupo</p>';
+            $grupos_p = '<span style="color:gray"> Não possui nenhum grupo</span>';
           }
           echo '<div class="caracteristicas_dos_produtos" id="produto'.$produto->id.'" style="display:none">
                   <p>Nome: '.$produto->nome.'</p>
@@ -144,15 +125,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <div class="display_box" id="direita_grupos">
       <div id="grupos_display">
         <?php foreach ($grupos as $grupo) {
-          $produtos_p = '<p>';
+          $produtos_p = '';
           if(property_exists($grupo, 'produtos')){
             foreach ($grupo->produtos as $produto) {
-              $produtos_p = $produtos_p.'<br /><p>'.$produto->nome.'</p>';
+              $produtos_p = $produtos_p.' '.$produto->nome;
             }
           }
-          $produtos_p = $produtos_p.'</p>';
-          if($produtos_p == '<p></p>'){
-            $produtos_p = '<p style="color:gray"> Não possui nenhum grupo</p>';
+          $produtos_p = $produtos_p.'';
+          if($produtos_p == ''){
+            $produtos_p = '<span style="color:gray"> Não possui nenhum grupo</span>';
           }
           echo '<div class="caracteristicas_dos_grupos" id="grupo'.$grupo->id.'" style="display:none">
                   <p>Nome: '.$grupo->nome.'</p>
