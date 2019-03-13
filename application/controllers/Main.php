@@ -120,33 +120,68 @@ class Main extends CI_Controller {
 
 	public function criar_produto(){
 		$produto_criado = $this->Produtos_model->criar($this->input->post());
-		redirect('', 'refresh');
+		redirect('criar', 'refresh');
 
 	}
 
 	public function criar_grupo(){
 		$produto_criado = $this->GrupoDeProdutos_model->criar($this->input->post());
-		redirect('', 'refresh');
+		redirect('criar', 'refresh');
 
 	}
 
 	//READ
 	public function ler(){
+		$grupos =$this->GrupoDeProdutos_model->ler(NULL);
+
+		$produtos = $this->Produtos_model->ler(NULL);
+		$produtos_com_grupos = new stdClass();
+		$count = 0;
+		foreach ($produtos as $produto) {
+			$produtos_com_grupos->$count = $this->Produtos_model->ler(array(
+																															'id' => $produto->id
+																														)
+																												);
+			$count = $count+1;
+
+		}
+
+		$grupos_com_produtos = new stdClass();
+		$count = 0;
+		foreach ($grupos as $grupo) {
+			$grupos_com_produtos->$count = $this->GrupoDeProdutos_model->ler(array(
+																															'id' => $grupo->id
+																														)
+																												);
+			$count = $count+1;
+
+		}
+
 		$data = array(
 									'titulo' => 'CRUD - Teste Instituto Bulla',
-									'subtitulo' => 'Ler'
+									'subtitulo' => 'Ler',
+									'grupos' => $grupos_com_produtos,
+									'produtos' => $produtos_com_grupos
 									);
+									if($data['grupos'] == ''){
+										$data['grupos'] = array();
+									}
+									if($data['produtos'] == ''){
+										$data['produtos'] = array();
+									}
 		$this->load->view('ler', $data);
 	}
 
+	/* nao necessario, pois os dados ja estao sendo lidos quando carrega a pagina
 	public function mostrar_produto(){
+		$produto_lido = $this->Produtos_model->ler($this->input->post());
 
 	}
 
 	public function mostrar_grupo(){
-
+		$grupo_lido = $this->GrupoDeProdutos_model->ler($this->input->post());
 	}
-
+	*/
 	//UPDATE
 	public function atualizar(){
 		$data = array(

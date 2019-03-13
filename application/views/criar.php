@@ -5,10 +5,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div id="container">
   <h1 id="page_title"><?php echo $titulo; ?></h1>
 		<nav id="nav_bar" class="nav_bar" style="display : inline-block">
-       <a class="nav_bar" href=""><p>Create</p></a>
-  		 <a class="nav_bar" href=""><p>Read</p></a>
-  		 <a class="nav_bar" href=""><p>Update</p></a>
-  		 <a class="nav_bar" href=""><p>Delete</p></a>
+      <a class="nav_bar" href="criar"><p>Create</p></a>
+      <a class="nav_bar" href="ler"><p>Read</p></a>
+      <a class="nav_bar" href="atualizar"><p>Update</p></a>
+      <a class="nav_bar" href="deletar"><p>Delete</p></a>
 </nav>
 <h2 class="subtitulo"><?php echo $subtitulo; ?></h2>
   <div id="container_adicionar">
@@ -38,7 +38,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                       );
       echo form_dropdown('tipo', $options_tipo);
       echo form_label('Grupos a que pertence');
-      print_r(count($grupos));
       if(!(count($grupos))==0){
         $grupos_nomes = array();
         for($i=0; $i<count($grupos); $i++){

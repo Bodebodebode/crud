@@ -48,7 +48,24 @@ class GrupoDeProdutos_model extends CI_Model {
       // retorna todos os valores da table
       $query = $this->db->get('grupos');
       return $query->result();
+    } else if(array_key_exists('id', $dados)){
+      $this->db->where('id', $dados['id']);
+      $query1 = $this->db->get('grupos');
+      $grupo = $query1->result()[0];
+      $this->db->where('grupos', $dados['id']);
+      $query2 = $this->db->get('produtosxgrupos');
+      if($query2->num_rows()>=1){
+        $produtos_add = new stdClass();
+        $count=0;
+        foreach ($query2->result() as $produto) {
+          $this->db->where('id', $produto->produtos);
+          $query3 = $this->db->get('produtos', 1);
+          $produtos_add->$count=$query3->result()[0];
+          $count=$count+1;
+        }
+        $grupo->produtos = $produtos_add;
+      }
+      return $grupo;
     }
   }
-
 }

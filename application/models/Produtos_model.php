@@ -46,12 +46,50 @@ class Produtos_model extends CI_Model {
   }
 }
 
-  public function ler($data){
-    if($data == NULL){
+  public function ler($dados){
+    if($dados == NULL){
       // retorna todos os valores da table
       $query = $this->db->get('produtos');
       return $query->result();
+    } else if(array_key_exists('id', $dados)){
+      $this->db->where('id', $dados['id']);
+      $query1 = $this->db->get('produtos');
+      $produto = $query1->result()[0];
+      $this->db->where('produtos', $dados['id']);
+      $query2 = $this->db->get('produtosxgrupos');
+      if($query2->num_rows()>=1){
+        $grupos_add = new stdClass();
+        $count=0;
+        foreach ($query2->result() as $grupo) {
+          $this->db->where('id', $grupo->grupos);
+          $query3 = $this->db->get('grupos', 1);
+          $grupos_add->$count=$query3->result()[0];
+          $count=$count+1;
+        }
+        $produto->grupos = $grupos_add;
+      }
+      return $produto;
     }
   }
 
-}
+} /*else if(array_key_exists('nome', $dados)){
+        $this->db->where('nome', $dados['nome']);
+        $query = $this->db->get('produtos');
+        return $query->result();
+
+      } else if(array_key_exists('codigo', $dados)){
+      $this->db->where('codigo', $dados['codigo']);
+      $query = $this->db->get('produtos');
+      return $query->result();
+
+
+      } else if(array_key_exists('fabricante', $dados)){
+          $this->db->where('fabricante', $dados['fabricante']);
+          $query = $this->db->get('produtos');
+          return $query->result();
+
+      } else if(array_key_exists('tipo', $dados)){
+            $this->db->where('tipo', $dados['tipo']);
+            $query = $this->db->get('produtos');
+            return $query->result();
+      }*/
