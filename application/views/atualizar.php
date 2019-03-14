@@ -3,6 +3,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
 <?php  $this->load->view('header'); ?>
 <script>
+
+  window.onload = function(){
+    var elements_produtos = document.getElementsByClassName('id_produto');
+    for(var i=0; i<elements_produtos.length; i++){
+      elements_produtos[i].value = elements_produtos[i].getAttribute('id') ;
+    };
+    var elements_grupos = document.getElementsByClassName('id_grupo');
+    for(var i=0; i<elements_grupos.length; i++){
+      elements_grupos[i].value = elements_grupos[i].getAttribute('id') ;
+    };
+
+  }
+
   function grupo_pega_valor(){
     var id = document.getElementById("select_grupos").value;
     var elements = document.getElementById('grupos_display').getElementsByClassName('caracteristicas_dos_grupos');
@@ -39,7 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     display: inline-block;
     width: 50%;
     height: 250px;
-}
+  }
 </style>
 
 <div id="container">
@@ -94,17 +107,60 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 }
               }
               if($grupos_p == ''){
-                $grupos_p = '<p style="color:gray"> Não possui nenhum grupo</p>';
+                $grupos_p = '<span style="color:gray"> Não possui nenhum grupo</span>';
               }
-              echo '<div class="caracteristicas_dos_produtos" id="produto'.$produto->id.'" style="display:none">
-                      <p>Nome: '.$produto->nome.'</p>
-                      <p>Código: '.$produto->codigo.'</p>
-                      <p>Id: '.$produto->id.'</p>
-                      <p>Fabricante: '.$produto->fabricante.'</p>
-                      <p>Tipo: '.$produto->tipo.'</p>
-                      <p>Grupos a que pertence: '.$grupos_p.'</p>
-              </div>';
-            }
+              echo '<div class="caracteristicas_dos_produtos" id="produto'.$produto->id.'" style="display:none">';
+              echo form_open('main/atualizar_produto');
+              echo '<p><span>Nome: '.$produto->nome;
+              echo form_input('nome', set_value('nome'), array('autofocus' => 'autofocus')).'</span></p>';
+              echo '<p>Código: '.$produto->codigo.'</p>
+                    <p>Id: '.$produto->id;
+              echo form_input('id', set_value('id'), array(
+                                                          'id' => $produto->id,
+                                                          'class' => 'id_produto',
+                                                          'hidden' => 'true'
+                                                          )
+                              );
+              echo  '</p>';
+              echo  '<p><span>Fabricante: '.$produto->fabricante;
+              echo form_input('fabricante', set_value('fabricante')).'</span></p>
+                    <p><span>Tipo: '.$produto->tipo;
+              $options_tipo = array (
+                        'Comprimido'=> 'Comprimido',
+                        'Cápsula'   => 'Cápsula',
+                        'Drágea'    => 'Drágea',
+                        'Solução'   => 'Solução',
+                        'Suspensão' => 'Suspensão',
+                        'Xarope'    => 'Xarope',
+                        'Pílula'    => 'Pílula',
+                        'Pomada'    => 'Pomada',
+                        'Creme'     => 'Creme',
+                        'Aerosol'   => 'Aerosol',
+                        'Injetável' => 'Injetável',
+                        'Colírio'   => 'Colírio'
+                      );
+              echo form_dropdown('tipo', $options_tipo).'</span></p>
+                    <p><span>Grupos a que pertence: '.$grupos_p;
+              echo '<p><span> Adicionar grupos: ';
+              $grupos_nomes = array();
+              foreach ($grupos as $grupo) {
+                $grupos_nomes[$grupo->id] = $grupo->nome;
+              }
+              echo form_multiselect('adicionar[]', $grupos_nomes, $grupos_nomes,array('style' =>'max-height: 15em;; overflow:scroll;'));
+              if($grupos_p != '<span style="color:gray"> Não possui nenhum grupo</span>'){
+                      echo 'Deletar grupos: ';
+                      $grupos_do_produto_para_remover = array();
+                      foreach ($produto->grupos as $grupo) {
+                          $grupos_do_produto_para_remover[$grupo->id] = $grupo->nome ;
+
+                      }
+                      echo form_multiselect('remover[]', $grupos_do_produto_para_remover, $grupos_do_produto_para_remover,array('style' =>'max-height: 15em;; overflow:scroll;'));
+                    }
+                    echo form_submit('', 'Enviar');
+                    echo form_close();
+                    echo '</span></p></div>';
+
+                        }
             ?>
           </div>
           </div>
@@ -138,22 +194,51 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="display_box" id="direita_grupos">
           <div id="grupos_display">
             <?php foreach ($grupos as $grupo) {
-              $produtos_p = '<p>';
+              $produtos_p = '';
               if(property_exists($grupo, 'produtos')){
                 foreach ($grupo->produtos as $produto) {
-                  $produtos_p = $produtos_p.'<br /><p>'.$produto->nome.'</p>';
+                  $produtos_p = $produtos_p.' '.$produto->nome;
                 }
               }
-              $produtos_p = $produtos_p.'</p>';
-              if($produtos_p == '<p></p>'){
-                $produtos_p = '<p style="color:gray"> Não possui nenhum grupo</p>';
+              if($produtos_p == ''){
+                $produtos_p = '<span style="color:gray"> Não possui nenhum produto</span>';
               }
-              echo '<div class="caracteristicas_dos_grupos" id="grupo'.$grupo->id.'" style="display:none">
-                      <p>Nome: '.$grupo->nome.'</p>
-                      <p>Id: '.$grupo->id.'</p>
-                      <p>Produtos do grupo: '.$produtos_p.'</p>
-              </div>';
-            }
+              echo '<div class="caracteristicas_dos_grupos" id="grupo'.$grupo->id.'" style="display:none">';
+              echo form_open('main/atualizar_grupo');
+              echo '<p><span>Nome: '.$grupo->nome;
+              echo form_input('nome', set_value('nome'), array('autofocus' => 'autofocus')).'</span></p>';
+
+              echo '<p>Id: '.$grupo->id;
+              echo form_input('id', set_value('id'), array(
+                                                          'id' => $grupo->id,
+                                                          'class' => 'id_grupo',
+                                                          'hidden' => 'true'
+                                                          )
+                              );
+              echo  '</p>';
+              echo  '<p><span>Produtos do grupo: '.$produtos_p.'</span></p>';
+              echo '<p><span> Adicionar produtos: ';
+              $produtos_nomes = array();
+              foreach ($produtos as $produto) {
+                $produtos_nomes[$produto->id] = $produto->nome;
+              }
+              echo form_multiselect('adicionar[]', $produtos_nomes, $produtos_nomes,array('style' =>'max-height: 15em;; overflow:scroll;'));
+              if($produtos_p != '<span style="color:gray"> Não possui nenhum produto</span>'){
+                      echo 'Deletar produtos: ';
+                      $produtos_do_grupo_para_remover = array();
+                      foreach ($grupo->produtos as $produto) {
+                          $produtos_do_grupo_para_remover[$produto->id] = $produto->nome ;
+
+                      }
+                      echo form_multiselect('remover[]', $produtos_do_grupo_para_remover, $produtos_do_grupo_para_remover,array('style' =>'max-height: 15em;; overflow:scroll;'));
+                    }
+                    echo form_submit('', 'Enviar');
+                    echo form_close();
+                    echo '</span></p></div>';
+
+                        }
+
+
             ?>
           </div>
         </div>

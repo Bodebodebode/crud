@@ -104,6 +104,68 @@ class Produtos_model extends CI_Model {
     return;
   }
 
+  public function atualizar($dados){
+    $count = 0;
+    $keys = array_keys($dados);
+    foreach ($dados as $value) {
+      // remove espacos em branco
+      if($value==""){
+        unset($dados[$keys[$count]]);
+        unset($keys[$count]);
+      }
+      $count = $count+1;
+    }
+    $data = array();
+    $data_grupos = array(
+                        'remover' => array(),
+                        'adicionar' => array()
+    );
+    for ($i=0; $i<count($dados); $i++) {
 
+      if(array_keys($dados)[$i] != 'adicionar' &&  array_keys($dados)[$i] != 'remover' && array_keys($dados)[$i] != 'id'){
+        $data[array_keys($dados)[$i]] = $dados[array_keys($dados)[$i]];
+      } else if(array_keys($dados)[$i] == 'remover'){
+          $remover = $dados[array_keys($dados)[$i]];
+          for($j=0; $j<count($remover);$j++){
+            array_push($data_grupos['remover'], $remover[$j]);
+          }
+
+      } else if(array_keys($dados)[$i] == 'adicionar'){
+        $adicionar = $dados[array_keys($dados)[$i]];
+        for($j=0; $j<count($adicionar);$j++){
+          array_push($data_grupos['adicionar'], $adicionar[$j]);
+        }
+      }
+    }
+
+    // atualiza dados do produto
+    if($data != array()){
+      $this->db->set($data);
+      $this->db->where('id', $dados['id']);
+      $this->db->update('produtos');
+    }
+    // remove grupos
+    if($data_grupos['remover'] != array()){
+      foreach ($data_grupos['remover'] as $grupo) {
+        $this->db->where('grupos', $grupo);
+        $this->db->where('produtos', $dados['id']);
+        $this->db->delete('produtosxgrupos');
+
+      }
+    }
+    // adiciona grupos
+    if($data_grupos['adicionar'] != array()){
+      foreach ($data_grupos['adicionar'] as $grupo) {
+        $this->db->where('grupos', $grupo);
+        $this->db->where('produtos', $dados['id']);
+        $dados_novo = array(
+                            'produtos' =>$dados['id'],
+                            'grupos' => $grupo
+                            );
+        $this->db->insert('produtosxgrupos', $dados_novo);
+      }
+  }
+
+  }
 
 }

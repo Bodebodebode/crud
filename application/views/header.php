@@ -41,6 +41,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		  width: 50%;
 		  height: 250px;
 		}
+		#direita_grupos{
+			margin:50px;
+		}
+		#direita_produtos{
+			margin:50px;
+		}
 	</style>
 </head>
 <body>

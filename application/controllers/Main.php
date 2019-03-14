@@ -209,11 +209,13 @@ class Main extends CI_Controller {
 	}
 
 	public function atualizar_produto(){
-
+		$this->Produtos_model->atualizar($this->input->post());
+		redirect('', 'refresh');
 	}
 
 	public function atualizar_grupo(){
-
+		$this->GrupoDeProdutos_model->atualizar($this->input->post());
+		redirect('', 'refresh');
 	}
 
 	//DELETE
@@ -240,7 +242,8 @@ class Main extends CI_Controller {
 	}
 
 	public function deletar_grupo(){
-
+		$deletar_grupo = $this->GrupoDeProdutos_model->deletar($this->input->post());
+		redirect('', 'refresh');
 	}
 
 }
